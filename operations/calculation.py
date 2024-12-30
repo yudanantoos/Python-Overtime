@@ -24,69 +24,49 @@ def ambil_data():
     buka.close()
     return penyimpanan
 
-def input_data(penyimpanan):
-    s = json.dumps(penyimpanan)
-    with open(databasenya, 'w') as simpan:
-        simpan.write(s)
-        if simpan.writable():
-            print("Data lembur berhasil disimpan")
+def simpan_data(simpan):
+    s = json.dumps(simpan)
+    with open(databasenya, 'w') as save:
+        save.write(s)
+        if save.writable():
+            save.close()
+            return True
         else:
-            print("Ada kesalahan, data lembur belum tersimpan")
-    simpan.close()
+            save.close()
+            return False
+
+def input_data(penyimpanan):
+    if simpan_data(penyimpanan):
+        print("Data lembur berhasil disimpan")
+    else:
+        print("Ada kesalahan, data lembur belum tersimpan")
 
 def edit_data(edit):
     cek_database()
-    if len(ambil_data()) != 0:
-        s = json.dumps(edit)
-        with open(databasenya, 'r+') as simpan:
-            simpan.write(s)
-            if simpan.writable():
-                print("Data lembur berhasil diedit dan disimpan")
-            else:
-                print("Ada kesalahan, data lembur belum diedit dan tersimpan")
-        simpan.close()
+    if len(ambil_data()) > 0:
+        if simpan_data(edit):
+            print("Data lembur berhasil diedit dan disimpan")
+        else:
+            print("Ada kesalahan, data lembur belum diedit dan tersimpan")
     else:
         print("Belum ada data yang bisa diedit")
 
 def hapus_data(hapus):
     cek_database()
-    if len(ambil_data()) != 0:
-        s = json.dumps(hapus)
-        with open(databasenya, 'w') as hp:
-            hp.write(s)
-            if hp.writable():
-                print("Data lembur berhasil dihapus")
-            else:
-                print("Ada kesalahan, data lembur belum terhapus")
-        hp.close()
+    if len(ambil_data()) > 0:
+        if simpan_data(hapus):
+            print("Data lembur berhasil dihapus")
+        else:
+            print("Ada kesalahan, data lembur belum terhapus")
     else:
         print("Belum ada data yang bisa dihapus")
 
 def ambil_gapok():
-    """
-    cek_database()
-    with open(database_gapok, 'r') as baca:
-        lihat = baca.readline()
-    konversi = json.loads(lihat)
-    baca.close()
-    return float(konversi['Gapok'])
-    """
     data = float(pengaturan.load_pengaturan()['DEFAULT']['Gapok'])
     return data
 
 
 def input_gapok(gapok):
-    """
-    tampung = {'Gapok': gapok}
-    js = json.dumps(tampung)
-    with open(database_gapok, 'w') as simpan:
-        simpan.write(js)
-        if simpan.writable():
-            print("Gapok berhasil disimpan")
-        else:
-            print("Ada kesalahan, gapok belum tersimpan")
-    simpan.close()
-    """
     pengaturan.pengaturan['DEFAULT']['Gapok'] = gapok
     pengaturan.simpan_pengaturan()
     if pengaturan.load_pengaturan()['DEFAULT']['Gapok'] == gapok:
