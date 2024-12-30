@@ -1,4 +1,4 @@
-import operations
+from operations import operation
 
 def menu():
     # Menu
@@ -29,19 +29,19 @@ while True:
     print("Input pilihan:")
     masukan = input()
     if masukan == '1':
-        operations.operation.data_overtime()
+        operation.data_overtime()
         back_to_menu()
     elif masukan == '2':
-        operations.operation.input_overtime()
+        operation.input_overtime()
         back_to_menu()
     elif masukan == '3':
-        operations.operation.edit_overtime()
+        operation.edit_overtime()
         back_to_menu()
     elif masukan == '4':
-        operations.operation.hapus_overtime()
+        operation.hapus_overtime()
         back_to_menu()
     elif masukan == '5':
-        operations.operation.input_gaji_pokok()
+        operation.input_gaji_pokok()
         back_to_menu()
     elif masukan == '6':
         print("Program ditutup!")

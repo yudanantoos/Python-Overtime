@@ -1,19 +1,23 @@
 import json
 import os.path
 import calendar
-import pengaturan
+from . import pengaturan
 
 databasenya = pengaturan.load_pengaturan()['DEFAULT']['DataFile']
 hasil_perkalian_jam = 0
 hasil_uang_lemburan = 0
 
 def cek_database():
-    if not os.path.exists(databasenya):
+    if not os.path.isdir(pengaturan.load_pengaturan()['DEFAULT']['DataDir']) and not os.path.exists(databasenya):
+        os.mkdir(pengaturan.load_pengaturan()['DEFAULT']['DataDir'])
         penyimpanan_data = {}
         pd = json.dumps(penyimpanan_data)
         with open(databasenya,'w') as fley:
             fley.write(pd)
         fley.close()
+        print('ok')
+    else:
+        print('not ok')
 
 def ambil_data():
     cek_database()

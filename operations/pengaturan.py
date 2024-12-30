@@ -1,12 +1,13 @@
 import configparser
+import os
 
 pengaturan = configparser.ConfigParser()
 pengaturan['DEFAULT'] = {'DataDir' : '../Data',
-                         'DataFile' : '${datadir}/data-overtime.json',
+                         'DataFile' : '%(datadir)s/data-overtime.json',
                          'Gapok' : 0}
 
 def simpan_pengaturan():
-    with open('tes.ini', 'w') as simpan:
+    with open('config.ini', 'w') as simpan:
         pengaturan.write(simpan)
 
 def load_pengaturan():

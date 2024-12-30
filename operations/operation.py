@@ -1,4 +1,4 @@
-import calculation
+from . import calculation
 
 def semua_data_overtime():
     print("=" * 100)
