@@ -2,7 +2,7 @@ import configparser
 
 pengaturan = configparser.ConfigParser()
 
-pengaturan['DEFAULT']['Gapok'] = '0'
+pengaturan['DEFAULT']['gapok'] = '0'
 
 def simpan_pengaturan():
     with open('config.ini', 'w') as simpan:
