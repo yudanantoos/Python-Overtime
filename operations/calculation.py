@@ -62,14 +62,14 @@ def hapus_data(hapus):
         print("Belum ada data yang bisa dihapus")
 
 def ambil_gapok():
-    data = float(pengaturan.load_pengaturan()['DEFAULT']['Gapok'])
+    data = float(pengaturan.load_pengaturan()['DEFAULT']['gapok'])
     return data
 
 
 def input_gapok(gapok):
-    pengaturan.pengaturan['DEFAULT']['Gapok'] = gapok
+    pengaturan.pengaturan['DEFAULT']['gapok'] = gapok
     pengaturan.simpan_pengaturan()
-    if pengaturan.load_pengaturan()['DEFAULT']['Gapok'] == gapok:
+    if pengaturan.load_pengaturan()['DEFAULT']['gapok'] == gapok:
         print("Gapok berhasil disimpan")
     else:
         print("Ada kesalahan, gapok belum tersimpan")
