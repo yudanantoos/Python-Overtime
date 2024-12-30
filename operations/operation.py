@@ -82,57 +82,61 @@ def input_overtime():
         print("Masukkan Jam Lembur: ")
         jam_lembur = float(input())
 
-        calculation.rumus(tahun, bulan, tanggal, jam_lembur)
+        if len(tanggal) == 2 and len(bulan) == 2 and len(tahun) == 4:
+            calculation.rumus(tahun, bulan, tanggal, jam_lembur)
 
-        if len(data_tahunan) > 0:
-            if tahun in data_tahunan.keys():
-                data_bulanan = data_tahunan[tahun]
-                if bulan in data_bulanan.keys():
-                    data_harian = data_bulanan[bulan]
-                    if len(data_harian) > 0:
-                        b = False
-                        jor = 0
-                        while jor < len(data_harian):
-                            b = f"{tanggal}/{bulan}/{tahun}" not in data_harian[jor].values()
-                            jor += 1
-                        if b:
+            if len(data_tahunan) > 0:
+                if tahun in data_tahunan.keys():
+                    data_bulanan = data_tahunan[tahun]
+                    if bulan in data_bulanan.keys():
+                        data_harian = data_bulanan[bulan]
+                        if len(data_harian) > 0:
+                            b = False
+                            jor = 0
+                            while jor < len(data_harian):
+                                b = f"{tanggal}/{bulan}/{tahun}" not in data_harian[jor].values()
+                                jor += 1
+                            if b:
+                                data_harian.append({'Tanggal': f"{tanggal}/{bulan}/{tahun}", 'Jam lembur': jam_lembur,
+                                                    'Perkalian jam lembur': calculation.hasil_perkalian_jam,
+                                                    'Nominal uang lembur': calculation.hasil_uang_lemburan})
+                                calculation.input_data(data_tahunan)
+                            else:
+                                print(f"Data tanggal {tanggal}/{bulan}/{tahun} sudah ada")
+                                print("Mau di edit kah?")
+                                print("1. Ya, edit")
+                                print("2. Tidak, batalkan")
+                                jo = input()
+                                if jo == '1':
+                                    i = 0
+                                    while i < len(data_harian):
+                                        if f"{tanggal}/{bulan}/{tahun}" in data_harian[i].values():
+                                            data_harian[i] = {'Tanggal': f"{tanggal}/{bulan}/{tahun}", 'Jam lembur': jam_lembur,
+                                                              'Perkalian jam lembur': calculation.hasil_perkalian_jam,
+                                                              'Nominal uang lembur': calculation.hasil_uang_lemburan}
+                                        i += 1
+                                    calculation.edit_data(data_tahunan)
+                                else:
+                                    print("Input data dibatalkan")
+                        else:
                             data_harian.append({'Tanggal': f"{tanggal}/{bulan}/{tahun}", 'Jam lembur': jam_lembur,
                                                 'Perkalian jam lembur': calculation.hasil_perkalian_jam,
                                                 'Nominal uang lembur': calculation.hasil_uang_lemburan})
                             calculation.input_data(data_tahunan)
-                        else:
-                            print(f"Data tanggal {tanggal}/{bulan}/{tahun} sudah ada")
-                            print("Mau di edit kah?")
-                            print("1. Ya, edit")
-                            print("2. Tidak, batalkan")
-                            jo = input()
-                            if jo == '1':
-                                i = 0
-                                while i < len(data_harian):
-                                    if f"{tanggal}/{bulan}/{tahun}" in data_harian[i].values():
-                                        data_harian[i] = {'Tanggal': f"{tanggal}/{bulan}/{tahun}", 'Jam lembur': jam_lembur,
-                                                          'Perkalian jam lembur': calculation.hasil_perkalian_jam,
-                                                          'Nominal uang lembur': calculation.hasil_uang_lemburan}
-                                    i += 1
-                                calculation.edit_data(data_tahunan)
-                            else:
-                                print("Input data dibatalkan")
                     else:
-                        data_harian.append({'Tanggal': f"{tanggal}/{bulan}/{tahun}", 'Jam lembur': jam_lembur,
-                                            'Perkalian jam lembur': calculation.hasil_perkalian_jam,
-                                            'Nominal uang lembur': calculation.hasil_uang_lemburan})
+                        data_bulanan[bulan] = [{'Tanggal': f"{tanggal}/{bulan}/{tahun}", 'Jam lembur': jam_lembur, 'Perkalian jam lembur': calculation.hasil_perkalian_jam, 'Nominal uang lembur': calculation.hasil_uang_lemburan}]
                         calculation.input_data(data_tahunan)
                 else:
-                    data_bulanan[bulan] = [{'Tanggal': f"{tanggal}/{bulan}/{tahun}", 'Jam lembur': jam_lembur, 'Perkalian jam lembur': calculation.hasil_perkalian_jam, 'Nominal uang lembur': calculation.hasil_uang_lemburan}]
+                    data_tahunan[tahun] = {bulan:[{'Tanggal': f"{tanggal}/{bulan}/{tahun}", 'Jam lembur': jam_lembur, 'Perkalian jam lembur': calculation.hasil_perkalian_jam, 'Nominal uang lembur': calculation.hasil_uang_lemburan}]}
                     calculation.input_data(data_tahunan)
             else:
-                data_tahunan[tahun] = {bulan:[{'Tanggal': f"{tanggal}/{bulan}/{tahun}", 'Jam lembur': jam_lembur, 'Perkalian jam lembur': calculation.hasil_perkalian_jam, 'Nominal uang lembur': calculation.hasil_uang_lemburan}]}
+                data_harian = [{'Tanggal': f"{tanggal}/{bulan}/{tahun}", 'Jam lembur': jam_lembur, 'Perkalian jam lembur': calculation.hasil_perkalian_jam, 'Nominal uang lembur': calculation.hasil_uang_lemburan}]
+                data_bulanan = {bulan:data_harian}
+                data_tahunan = {tahun:data_bulanan}
                 calculation.input_data(data_tahunan)
         else:
-            data_harian = [{'Tanggal': f"{tanggal}/{bulan}/{tahun}", 'Jam lembur': jam_lembur, 'Perkalian jam lembur': calculation.hasil_perkalian_jam, 'Nominal uang lembur': calculation.hasil_uang_lemburan}]
-            data_bulanan = {bulan:data_harian}
-            data_tahunan = {tahun:data_bulanan}
-            calculation.input_data(data_tahunan)
+            print("Input yang dimasukkan salah euyy")
+            print("Formatnya harus seperti ini ges => dd/mm/yyyy")
     except ValueError:
         print("Ada kesalahan input, silahkan periksa lagi ya,.")
 
@@ -173,6 +177,9 @@ def edit_overtime():
             calculation.edit_data(jos)
         except ValueError:
             print("Input yang dimasukkan salah euyy")
+            print("Formatnya harus seperti ini ges => dd/mm/yyyy")
+        except KeyError:
+            print("Tanggal yang diminta tidak ada euyy")
     else:
         print("Tidak ada yang bisa diedit")
 

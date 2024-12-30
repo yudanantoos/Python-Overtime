@@ -1,16 +1,12 @@
 import configparser
-import os
 
 pengaturan = configparser.ConfigParser()
-"""
-pengaturan['DEFAULT'] = {'DataDir' : '../Data',
-                         'DataFile' : '%(DataDir)s/data-overtime.json',
-                         'Gapok' : 0}
+
+pengaturan['DEFAULT']['Gapok'] = '0'
 
 def simpan_pengaturan():
     with open('config.ini', 'w') as simpan:
         pengaturan.write(simpan)
-"""
 
 def load_pengaturan():
     pengaturan.read('config.ini')

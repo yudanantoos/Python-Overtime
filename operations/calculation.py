@@ -3,21 +3,18 @@ import os.path
 import calendar
 from . import pengaturan
 
-databasenya = pengaturan.load_pengaturan()['DEFAULT']['DataFile']
+databasenya = pengaturan.load_pengaturan()['DEFAULT']['datafile']
 hasil_perkalian_jam = 0
 hasil_uang_lemburan = 0
 
 def cek_database():
-    if not os.path.isdir(pengaturan.load_pengaturan()['DEFAULT']['DataDir']) and not os.path.exists(databasenya):
-        os.mkdir(pengaturan.load_pengaturan()['DEFAULT']['DataDir'])
+    if not os.path.isdir(pengaturan.load_pengaturan()['DEFAULT']['datadir']) and not os.path.exists(databasenya):
+        os.mkdir(pengaturan.load_pengaturan()['DEFAULT']['datadir'])
         penyimpanan_data = {}
         pd = json.dumps(penyimpanan_data)
         with open(databasenya,'w') as fley:
             fley.write(pd)
         fley.close()
-        print('ok')
-    else:
-        print('not ok')
 
 def ambil_data():
     cek_database()

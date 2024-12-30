@@ -1,3 +1,2 @@
-from operations import calculation
-
-calculation.cek_database()
+a = 'aa'
+print(len(a))
