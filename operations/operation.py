@@ -10,7 +10,7 @@ def semua_data_overtime():
     for th in calculation.ambil_data():
         for u in calculation.ambil_data()[th]:
             for i in calculation.ambil_data()[th][u]:
-                print(f"{no}\t\t{i["Tanggal"]}\t\t\t{i["Jam lembur"]}\t\t\t\t\t\t{i["Perkalian jam lembur"]}\t\t\t\t\t\t{calculation.format_rupiah(i["Nominal uang lembur"])}")
+                print(f"{no}\t\t{i}/{u}/{th}\t\t\t{calculation.ambil_data()[th][u][i]['Jam lembur']}\t\t\t\t\t\t{calculation.ambil_data()[th][u][i]['Perkalian jam lembur']}\t\t\t\t\t\t{calculation.format_rupiah(calculation.ambil_data()[th][u][i]['Nominal uang lembur'])}")
                 no += 1
     print("=" * 100)
 
@@ -74,17 +74,19 @@ def input_overtime():
 
     try:
         print("Masukkan Tanggal 1 - 31: ")
-        tanggal = input()
+        str_tanggal = input()
         print("Masukkan Bulan 1 - 12: ")
-        bulan = input()
+        str_bulan = input()
         print("Masukkan Tahun 1970 - Sekarang: ")
-        tahun = input()
+        str_tahun = input()
         print("Masukkan Jam Lembur: ")
         jam_lembur = float(input())
 
-        if len(tanggal) == 2 and len(bulan) == 2 and len(tahun) == 4:
+        if len(str_tanggal) == 2 and len(str_bulan) == 2 and len(str_tahun) == 4:
+            tanggal = int(str_tanggal)
+            bulan = int(str_bulan)
+            tahun = (str_tahun)
             calculation.rumus(tahun, bulan, tanggal, jam_lembur)
-
             if len(data_tahunan) > 0:
                 if tahun in data_tahunan.keys():
                     data_bulanan = data_tahunan[tahun]
@@ -265,3 +267,70 @@ def input_gaji_pokok():
     print("Silahkan masukkan gaji pokoknya")
     gapok = input()
     calculation.input_gapok(gapok)
+
+def input_overtime_edited():
+    nilai_gapok = calculation.ambil_gapok()
+    data_tahunan = calculation.ambil_data()
+
+    if nilai_gapok == 0:
+        print("Gapok masih 0, mau masukkin gapoknya?")
+        print("1. Ya")
+        print("2. Tidak")
+        p = input()
+        if p == '1':
+            input_gaji_pokok()
+
+    try:
+        print("Masukkan 2 angka tanggal, 2 angka bulan, 4 angka tahun")
+        print("Formatnya seperti ini ya => dd/mm/yyyy")
+        print("Masukkan Tanggal 1 - 31: ")
+        str_tanggal = input()
+        print("Masukkan Bulan 1 - 12: ")
+        str_bulan = input()
+        print("Masukkan Tahun 1970 - Sekarang: ")
+        str_tahun = input()
+        print("Masukkan Jam Lembur: ")
+        jam_lembur = float(input())
+
+        if len(str_tanggal) == 2 and len(str_bulan) == 2 and len(str_tahun) == 4:
+            tanggal = int(str_tanggal)
+            bulan = int(str_bulan)
+            tahun = int(str_tahun)
+            calculation.rumus(tahun, bulan, tanggal, jam_lembur)
+            if tahun in data_tahunan:
+                data_bulanan = data_tahunan[tahun]
+                if bulan in data_bulanan:
+                    data_harian = data_bulanan[bulan]
+                    if tanggal in data_harian:
+                        print(f"Data tanggal {tanggal}/{bulan}/{tahun} sudah ada")
+                        print("Mau di edit kah?")
+                        print("1. Ya, edit")
+                        print("2. Tidak, batalkan")
+                        jo = input()
+                        if jo == '1':
+                            data_harian[tanggal] = {'Jam lembur': jam_lembur,
+                                                     'Perkalian jam lembur': calculation.hasil_perkalian_jam,
+                                                     'Nominal uang lembur': calculation.hasil_uang_lemburan}
+                            calculation.edit_data(data_tahunan)
+                        else:
+                            print("Input data dibatalkan")
+                    else:
+                        data_harian[tanggal] = {'Jam lembur': jam_lembur,
+                                                'Perkalian jam lembur': calculation.hasil_perkalian_jam,
+                                                'Nominal uang lembur': calculation.hasil_uang_lemburan}
+                        calculation.input_data(data_tahunan)
+                else:
+                    data_bulanan[bulan] = {tanggal: {'Jam lembur': jam_lembur,
+                                                     'Perkalian jam lembur': calculation.hasil_perkalian_jam,
+                                                     'Nominal uang lembur': calculation.hasil_uang_lemburan}}
+                    calculation.input_data(data_tahunan)
+            else:
+                data_tahunan[tahun] = {bulan: {tanggal: {'Jam lembur': jam_lembur,
+                                                          'Perkalian jam lembur': calculation.hasil_perkalian_jam,
+                                                          'Nominal uang lembur': calculation.hasil_uang_lemburan}}}
+                calculation.input_data(data_tahunan)
+        else:
+            print("Input tanggal, bulan, dan tahun yang dimasukkan salah euyy")
+            print("Formatnya harus seperti ini ges => dd/mm/yyyy")
+    except ValueError:
+        print("Ada kesalahan input, Jam Lembur hanya menerima angka dengan dot (titik) sebagai koma ya,.")

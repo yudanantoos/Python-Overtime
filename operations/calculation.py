@@ -37,7 +37,7 @@ def simpan_data(simpan):
 
 def input_data(penyimpanan):
     if simpan_data(penyimpanan):
-        print("Data lembur berhasil disimpan")
+        print("Data lembur berhasil diinput dan disimpan")
     else:
         print("Ada kesalahan, data lembur belum tersimpan")
 
@@ -77,7 +77,7 @@ def input_gapok(gapok):
 def rumus(tahun, bulan, tanggal, jam_lembur):
     global hasil_perkalian_jam, hasil_uang_lemburan
 
-    cal = calendar.weekday(int(tahun), int(bulan), int(tanggal))
+    cal = calendar.weekday(tahun, bulan, tanggal)
 
     if cal == 5 or cal == 6:
         jam_pertama = 2
