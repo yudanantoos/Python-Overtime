@@ -77,7 +77,7 @@ def input_gapok(gapok):
 def rumus(tahun, bulan, tanggal, jam_lembur):
     global hasil_perkalian_jam, hasil_uang_lemburan
 
-    cal = calendar.weekday(tahun, bulan, tanggal)
+    cal = calendar.weekday(int(tahun), int(bulan), int(tanggal))
 
     if cal == 5 or cal == 6:
         jam_pertama = 2

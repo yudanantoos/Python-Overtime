@@ -1,4 +1,5 @@
 from . import calculation
+import re
 
 def semua_data_overtime():
     print("=" * 100)
@@ -45,14 +46,15 @@ def data_overtime():
                     print('=' * 100)
                     no = 1
                     for i in ambil_harian:
-                        print(
-                            f"{no}\t\t{i["Tanggal"]}\t\t\t{i["Jam lembur"]}\t\t\t\t\t\t{i["Perkalian jam lembur"]}\t\t\t\t\t\t{calculation.format_rupiah(i["Nominal uang lembur"])}")
+                        print(f"{no}\t\t{i}/{bulan}/{tahun}\t\t\t{ambil_harian[i]['Jam lembur']}\t\t\t\t\t\t{ambil_harian[i]['Perkalian jam lembur']}\t\t\t\t\t\t{calculation.format_rupiah(ambil_harian[i]['Nominal uang lembur'])}")
                         no += 1
                     print("=" * 100)
                 else:
                     print(f"Belum ada data lemburan Bulan {bulan} di Tahun {tahun}")
+                    print("Atau input yang kamu masukkan salah")
             else:
                 print(f"Belum ada data lemburan di Tahun {tahun}")
+                print("Atau input yang kamu masukkan salah")
         elif ouwe == '2':
             semua_data_overtime()
         else:
@@ -60,6 +62,7 @@ def data_overtime():
     else:
         print("Tidak ada data lemburan")
 
+# Inputan lama, tidak terpakai
 def input_overtime():
     nilai_gapok = calculation.ambil_gapok()
     data_tahunan = calculation.ambil_data()
@@ -203,13 +206,13 @@ def hapus_overtime():
                 calculation.hapus_data(yos)
                 print(f"Data tahun {joe} dihapus")
             else:
-                print("Input tidak sesuai data")
+                print("Input tahun tidak ada atau tidak sesuai data")
         elif i == '2':
             print("Data perbulan:")
 
-            for i in calculation.ambil_data():
+            for i in yos:
                 print(i)
-                for u in calculation.ambil_data()[i]:
+                for u in yos[i]:
                     print('\t| -', u)
 
             print("Pilih tahun yang akan dihapus")
@@ -224,40 +227,36 @@ def hapus_overtime():
                 else:
                     print("Tidak ada data bulan yang diminta")
             else:
-                print("Input tidak sesuai data")
+                print("Input tahun tidak ada atau tidak sesuai data")
 
         elif i == '3':
             print("Data perhari:")
 
-            hh = 0
-            for i in calculation.ambil_data():
+            for i in yos:
                 print(i)
-                for u in calculation.ambil_data()[i]:
+                for u in yos[i]:
                     print('\t| -', u)
-                    for o in calculation.ambil_data()[i][u]:
-                        print('\t\t| -', o['Tanggal'])
-                        hh += 1
+                    for o in yos[i][u]:
+                        print('\t\t| -', o)
 
             print("Silahkan isi tanggal yang akan dihapus")
-            print("Format dd/mm/yyyy")
-            try:
-                tgl = input()
+            print("Isikan sesuai data dengan format dd/mm/yyy gitu yaa,.")
+            tgl = input()
+            # Cek string menggunakan regular expresion (import re)
+            pattern_str = r'^\d{2}/\d{2}/\d{4}$'
+            if re.match(pattern_str, tgl):
+                tg = tgl[:2]
                 mm = tgl[3:5]
                 yyyy = tgl[6:10]
-
-                yoyoyoy = 0
-                for qiuw in yos[yyyy][mm]:
-                    if tgl in qiuw['Tanggal']:
-                        yos[yyyy][mm].pop(yoyoyoy)
-                        calculation.hapus_data(yos)
-                        print(f"Data tanggal {tgl} dihapus")
-                        yoyoyoy += 1
-                    else:
-                        print("Debug")
-            except KeyError:
-                print("Format input salah atau tidak ada data yang diminta")
-                print("Pastikan input sesuai data dan format")
-                print("2 digit tanggal/2 digit bulan/4 digit tahun")
+                if tg in yos[yyyy][mm]:
+                    yos[yyyy][mm].pop(tg)
+                    calculation.hapus_data(yos)
+                    print(f"Data tanggal {tgl} dihapus")
+                else:
+                    print("Input tidak sesuai data")
+            else:
+                print("Format tidak sesuai permintaan")
+                print("Isikan sesuai data dan format wajib seperti ini ya => dd/mm/yyy")
         else:
             print("Input yang dimasukkan tidak sesuai")
     else:
@@ -284,18 +283,15 @@ def input_overtime_edited():
         print("Masukkan 2 angka tanggal, 2 angka bulan, 4 angka tahun")
         print("Formatnya seperti ini ya => dd/mm/yyyy")
         print("Masukkan Tanggal 1 - 31: ")
-        str_tanggal = input()
+        tanggal = input()
         print("Masukkan Bulan 1 - 12: ")
-        str_bulan = input()
+        bulan = input()
         print("Masukkan Tahun 1970 - Sekarang: ")
-        str_tahun = input()
+        tahun = input()
         print("Masukkan Jam Lembur: ")
         jam_lembur = float(input())
 
-        if len(str_tanggal) == 2 and len(str_bulan) == 2 and len(str_tahun) == 4:
-            tanggal = int(str_tanggal)
-            bulan = int(str_bulan)
-            tahun = int(str_tahun)
+        if len(tanggal) == 2 and len(bulan) == 2 and len(tahun) == 4:
             calculation.rumus(tahun, bulan, tanggal, jam_lembur)
             if tahun in data_tahunan:
                 data_bulanan = data_tahunan[tahun]
