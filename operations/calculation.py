@@ -83,8 +83,8 @@ def rumus(tahun, bulan, tanggal, jam_lembur):
         jam_pertama = 2
     else:
         jam_pertama = 1.5
-    jam_selanjutnya = (jam_lembur - 1) * 2
 
+    jam_selanjutnya = (jam_lembur - 1) * 2
     gaji_perjam = ambil_gapok() * 1 / 173
     hasil_perkalian_jam = jam_pertama + jam_selanjutnya
     hasil_uang_lemburan = gaji_perjam * hasil_perkalian_jam
