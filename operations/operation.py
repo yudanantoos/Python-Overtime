@@ -14,7 +14,7 @@ def semua_data_overtime():
     for th in my_data:
         for u in my_data[th]:
             for i in my_data[th][u]:
-                print(f"{no}\t\t{i}/{u}/{th}\t\t\t{my_data[th][u][i]['Jam lembur']}\t\t\t\t\t\t{my_data[th][u][i]['Perkalian jam lembur']}\t\t\t\t\t\t{calculation.format_rupiah(my_data[th][u][i]['Nominal uang lembur'])}")
+                print(f"{no}\t\t{i}/{u}/{th}\t\t\t{my_data[th][u][i]['Jam lembur']}\t\t\t{my_data[th][u][i]['Perkalian jam lembur']}\t\t\t\t{calculation.format_rupiah(my_data[th][u][i]['Nominal uang lembur'])}")
                 no += 1
     print("=" * 100)
 
@@ -26,7 +26,8 @@ def data_overtime():
         ouwe = input()
         if ouwe == '1':
             print("Data yang tersedia:")
-            print("Tahun - Bulan")
+            print("Tahun")
+            print("\t| - Bulan")
 
             for i in my_data:
                 print(i)

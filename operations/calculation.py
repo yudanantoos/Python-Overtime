@@ -17,7 +17,7 @@ def cek_database():
         fley.close()
 
 def ambil_data():
-    cek_database()
+    #cek_database()
     with open(databasenya, 'r') as buka:
         g = buka.readline()
     penyimpanan = json.loads(g)
@@ -42,7 +42,7 @@ def input_data(penyimpanan):
         print("Ada kesalahan, data lembur belum tersimpan")
 
 def edit_data(edit):
-    cek_database()
+    #cek_database()
     if len(ambil_data()) > 0:
         if simpan_data(edit):
             print("Data lembur berhasil diedit dan disimpan")
@@ -52,7 +52,7 @@ def edit_data(edit):
         print("Belum ada data yang bisa diedit")
 
 def hapus_data(hapus):
-    cek_database()
+    #cek_database()
     if len(ambil_data()) > 0:
         if simpan_data(hapus):
             print("Data lembur berhasil dihapus")
@@ -90,5 +90,5 @@ def rumus(tahun, bulan, tanggal, jam_lembur):
     hasil_uang_lemburan = gaji_perjam * hasil_perkalian_jam
 
 def format_rupiah(nominal):
-    rubah = 'Rp{:,.2f}'.format(nominal)
+    rubah = 'Rp {:,.2f}'.format(nominal)
     return rubah
