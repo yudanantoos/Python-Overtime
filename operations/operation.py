@@ -84,6 +84,7 @@ def input_overtime():
         print("Masukkan Tahun 1970 - Sekarang: ")
         tahun = input()
         print("Masukkan Jam Lembur: ")
+        print("Pemisah desimal pakai dot (titik) yaa,.")
         jam_lembur = float(input())
 
         if len(tanggal) == 2 and len(bulan) == 2 and len(tahun) == 4:
@@ -151,6 +152,7 @@ def edit_overtime():
             yyyy = tgl[6:10]
             try:
                 print("Masukkan jam lembur:")
+                print("Pemisah desimal pakai dot (titik) yaa,.")
                 jam_lembur = float(input())
 
                 calculation.rumus(yyyy, mm, dd, jam_lembur)
