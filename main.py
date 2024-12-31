@@ -32,7 +32,7 @@ while True:
         operation.data_overtime()
         back_to_menu()
     elif masukan == '2':
-        operation.input_overtime_edited()
+        operation.input_overtime()
         back_to_menu()
     elif masukan == '3':
         operation.edit_overtime()
