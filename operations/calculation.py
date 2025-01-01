@@ -65,7 +65,6 @@ def ambil_gapok():
     data = float(pengaturan.load_pengaturan()['DEFAULT']['gapok'])
     return data
 
-
 def input_gapok(gapok):
     pengaturan.pengaturan['DEFAULT']['gapok'] = gapok
     pengaturan.simpan_pengaturan()
@@ -92,3 +91,44 @@ def rumus(tahun, bulan, tanggal, jam_lembur):
 def format_rupiah(nominal):
     rubah = 'Rp {:,.2f}'.format(nominal)
     return rubah
+
+def jumlah_jam_asli(dari_dd_mm_yyyy, sampai_dd_mm_yyyy):
+    ambil_list_jam_asli = ambil_data()
+    hasil = 0
+    tampung_tahun = []
+    tampung_bulan = []
+    tampung_tanggal = []
+    range_tahun = list(range(int(dari_dd_mm_yyyy[6:10]), int(sampai_dd_mm_yyyy[6:10]) + 1))
+    range_bulan = list(range(int(dari_dd_mm_yyyy[3:5]), int(sampai_dd_mm_yyyy[3:5]) + 1))
+    range_tanggal = list(range(int(dari_dd_mm_yyyy[:2]), int(sampai_dd_mm_yyyy[:2]) + 1))
+
+    for th in ambil_list_jam_asli:
+        tampung_tahun.append(th)
+        for bl in ambil_list_jam_asli[th]:
+            tampung_bulan.append(bl)
+            for tgl in ambil_list_jam_asli[th][bl]:
+                tampung_tanggal.append(tgl)
+
+    for cth in range_tahun:
+        if str(cth) in tampung_tahun:
+            for cbl in range_bulan:
+                if cbl < 10:
+                    cbl = '0' + str(cbl)
+                    print(tampung_bulan)
+                    if str(cbl) in tampung_bulan:
+                        for ctgl in range_tanggal:
+                            print(ctgl)
+                            if ctgl < 10:
+                                ctgl = '0' + str(ctgl)
+                                if ctgl in tampung_tanggal:
+                                    hasil += ambil_list_jam_asli[cth][cbl][ctgl]['Jam lembur']
+    return hasil
+
+def jumlah_uang_lembur():
+    ambil_list_uang_lembur = ambil_data()
+    hasil = 0
+    for tahun in ambil_list_uang_lembur:
+        for bulan in ambil_list_uang_lembur[tahun]:
+            for tanggal in ambil_list_uang_lembur[tahun][bulan]:
+                hasil += ambil_list_uang_lembur[tahun][bulan][tanggal]['Nominal uang lembur']
+    return hasil
