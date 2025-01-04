@@ -7,33 +7,41 @@ databasenya = pengaturan.load_pengaturan()['DEFAULT']['datafile']
 hasil_perkalian_jam = 0
 hasil_uang_lemburan = 0
 
-def cek_database():
-    if not os.path.isdir(pengaturan.load_pengaturan()['DEFAULT']['datadir']) and not os.path.exists(databasenya):
+def cek_data_isi():
+    if not os.path.isdir(pengaturan.load_pengaturan()['DEFAULT']['datadir']):
         os.mkdir(pengaturan.load_pengaturan()['DEFAULT']['datadir'])
+
+    if not os.path.exists(databasenya):
         penyimpanan_data = {}
         pd = json.dumps(penyimpanan_data)
         with open(databasenya,'w') as fley:
             fley.write(pd)
         fley.close()
 
+    penyimpanan_data = ambil_data()
+    try:
+        if len(penyimpanan_data) > 0:
+            return True
+    except TypeError:
+        print("Error TypeError")
+
 def ambil_data():
-    #cek_database()
-    with open(databasenya, 'r') as buka:
-        g = buka.readline()
-    penyimpanan = json.loads(g)
-    buka.close()
-    return penyimpanan
+    try:
+        with open(databasenya, 'r') as buka:
+            g = buka.readline()
+        penyimpanan = json.loads(g)
+        buka.close()
+        return penyimpanan
+    except json.JSONDecodeError:
+        print("Ada kesalahan pada file .json")
 
 def simpan_data(simpan):
     s = json.dumps(simpan)
     with open(databasenya, 'w') as save:
         save.write(s)
         if save.writable():
-            save.close()
             return True
-        else:
-            save.close()
-            return False
+        save.close()
 
 def input_data(penyimpanan):
     if simpan_data(penyimpanan):
@@ -62,21 +70,22 @@ def hapus_data(hapus):
         print("Belum ada data yang bisa dihapus")
 
 def ambil_gapok():
-    data = float(pengaturan.load_pengaturan()['DEFAULT']['gapok'])
-    return data
+    return float(pengaturan.load_pengaturan()['DEFAULT']['gapok'])
 
 def input_gapok(gapok):
     pengaturan.pengaturan['DEFAULT']['gapok'] = gapok
     pengaturan.simpan_pengaturan()
     if pengaturan.load_pengaturan()['DEFAULT']['gapok'] == gapok:
         print("Gapok berhasil disimpan")
+        print(f'Gapok saat ini: {format_rupiah(pengaturan.load_pengaturan()['DEFAULT']['gapok'])}')
+        print("Kalau mau edit gapok langsung di file config.ini ya,.")
     else:
         print("Ada kesalahan, gapok belum tersimpan")
 
 def rumus(tahun, bulan, tanggal, jam_lembur):
     global hasil_perkalian_jam, hasil_uang_lemburan
 
-    cal = calendar.weekday(int(tahun), int(bulan), int(tanggal))
+    cal = calendar.weekday(tahun, bulan, tanggal)
 
     if cal == 5 or cal == 6:
         jam_pertama = 2
@@ -89,7 +98,7 @@ def rumus(tahun, bulan, tanggal, jam_lembur):
     hasil_uang_lemburan = gaji_perjam * hasil_perkalian_jam
 
 def format_rupiah(nominal):
-    rubah = 'Rp {:,.2f}'.format(nominal)
+    rubah = 'Rp {:,.2f}'.format(float(nominal))
     return rubah
 
 def jumlah_jam_asli(dari_dd_mm_yyyy, sampai_dd_mm_yyyy):

@@ -9,7 +9,7 @@ def menu():
     print("2. Input Overtime")
     print("3. Edit Overtime")
     print("4. Hapus Overtime")
-    print("5. Input Gapok")
+    print("5. Nilai Gapok")
     print("6. Exit Program")
 
 def back_to_menu():
@@ -41,7 +41,8 @@ while True:
         operation.hapus_overtime()
         back_to_menu()
     elif masukan == '5':
-        operation.input_gaji_pokok()
+        print("Nilai gapok saat ini:")
+        print(operation.f_nilai_gapok)
         back_to_menu()
     elif masukan == '6':
         print("Program ditutup!")

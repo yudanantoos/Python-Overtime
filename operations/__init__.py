@@ -1,3 +1,3 @@
-from operations.calculation import cek_database
+from .calculation import cek_data_isi
 
-cek_database()
+cek_data_isi()

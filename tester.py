@@ -1,3 +1,9 @@
+import datetime
+import json
+import trace
+import traceback
+
+import operations.operation
 from operations import calculation
 
 #print("{} jam".format(calculation.jumlah_jam_asli(13,14)))
@@ -33,6 +39,9 @@ for cth in cari_th:
                         print(f'{ctgl} aya di a[th][bl]')
 """
 
-p = calculation.jumlah_jam_asli('01/01/2024', '12/01/2025')
+a = calculation.ambil_data()
 
-print(p)
+for s in a:
+    print(s)
+    #print(s * 10)
+    print(float(s) * 10)
