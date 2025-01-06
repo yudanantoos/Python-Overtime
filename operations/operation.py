@@ -1,7 +1,6 @@
 import datetime
-
 from . import calculation
-import re
+# import re
 
 nilai_gapok = calculation.ambil_gapok()
 f_nilai_gapok = calculation.format_rupiah(nilai_gapok)
@@ -9,18 +8,18 @@ my_data = calculation.ambil_data()
 
 def semua_data_overtime():
     if calculation.cek_data_isi():
-        print("=" * 100)
+        print("=" * 150)
         print(f"\t\t\t\t\t\t\t\t\tALL DATA OVERTIME")
-        print("No \t\t Tanggal \t\t Jam lembur \t\t Perkalian Jam Lembur \t\t Nominal Uang Lembur")
-        print('=' * 100)
-
+        print("No \t\t Tanggal \t\t Jam lembur \t\t Perkalian Jam Lembur \t\t Nominal Uang Lembur \t\t Jumlah Jam Asli \t\t Jumlah Uang Lembur")
+        print('=' * 150)
+        print('='*100,'\t  ', calculation.jumlah_jam_asli(),'  \t\t\t\t', calculation.format_rupiah(calculation.jumlah_uang_lembur()))
         no = 1
         for th in my_data:
             for u in my_data[th]:
                 for i in my_data[th][u]:
-                    print(f"{no}\t\t{i}-{u}-{th}\t\t\t{my_data[th][u][i]['Jam lembur']}\t\t\t{my_data[th][u][i]['Perkalian jam lembur']}\t\t\t\t{calculation.format_rupiah(my_data[th][u][i]['Nominal uang lembur'])}")
+                    print(f"{no}\t\t{i}-{u}-{th}\t\t\t{my_data[th][u][i]['Jam lembur']}\t\t\t\t\t\t{my_data[th][u][i]['Perkalian jam lembur']}\t\t\t\t\t\t{calculation.format_rupiah(my_data[th][u][i]['Nominal uang lembur'])}")
                     no += 1
-        print("=" * 100)
+        print("=" * 150)
     else:
         print("Tidak ada data")
 
@@ -93,35 +92,35 @@ def input_overtime():
         f_yyyy = ddmmyyyy.strftime('%Y')
 
         if str(tahun) == f_yyyy:
-            if tahun in my_data:
-                data_bulanan = my_data[tahun]
-                if bulan in data_bulanan:
-                    data_harian = data_bulanan[bulan]
-                    if tanggal in data_harian:
+            if str(tahun) in my_data:
+                data_bulanan = my_data[str(tahun)]
+                if str(bulan) in data_bulanan:
+                    data_harian = data_bulanan[str(bulan)]
+                    if str(tanggal) in data_harian:
                         print(f"Data tanggal {tanggal}-{bulan}-{tahun} sudah ada")
                         print("Mau di edit kah?")
                         print("1. Ya, edit")
                         print("2. Tidak, batalkan")
                         jo = input()
                         if jo == '1':
-                            data_harian[tanggal] = {'Jam lembur': jam_lembur,
+                            data_harian[str(tanggal)] = {'Jam lembur': jam_lembur,
                                                          'Perkalian jam lembur': calculation.hasil_perkalian_jam,
                                                          'Nominal uang lembur': calculation.hasil_uang_lemburan}
                             calculation.edit_data(my_data)
                         else:
                             print("Input data dibatalkan")
                     else:
-                        data_harian[tanggal] = {'Jam lembur': jam_lembur,
+                        data_harian[str(tanggal)] = {'Jam lembur': jam_lembur,
                                                      'Perkalian jam lembur': calculation.hasil_perkalian_jam,
                                                      'Nominal uang lembur': calculation.hasil_uang_lemburan}
                         calculation.input_data(my_data)
                 else:
-                    data_bulanan[bulan] = {tanggal: {'Jam lembur': jam_lembur,
+                    data_bulanan[str(bulan)] = {str(tanggal): {'Jam lembur': jam_lembur,
                                                      'Perkalian jam lembur': calculation.hasil_perkalian_jam,
                                                      'Nominal uang lembur': calculation.hasil_uang_lemburan}}
                     calculation.input_data(my_data)
             else:
-                my_data[tahun] = {bulan: {tanggal: {'Jam lembur': jam_lembur,
+                my_data[str(tahun)] = {str(bulan): {str(tanggal): {'Jam lembur': jam_lembur,
                                                     'Perkalian jam lembur': calculation.hasil_perkalian_jam,
                                                     'Nominal uang lembur': calculation.hasil_uang_lemburan}}}
                 calculation.input_data(my_data)
@@ -148,33 +147,45 @@ def edit_overtime():
                     print('\t\t | -', o)
 
         print("Silahkan isi tanggal yang akan diedit")
-        print("Format dd-mm-yyyy")
-        tgl = input()
-        # Cek string menggunakan regular expresion (import re)
-        pattern_str = r'^\d{2}-\d{2}-\d{4}$'
-        if re.match(pattern_str, tgl):
-            dd = tgl[:2]
-            mm = tgl[3:5]
-            yyyy = tgl[6:10]
-            try:
+        print("Format %d-%m-%Y")
+        try:
+            tgl = input()
+
+            # Sudah di cek pakai fungsi
+            # Cek string menggunakan regular expresion (import re)
+            # Sudah tidak digunakan, ganti pakai pengecekan tanggal
+            # pattern_str = r'^\d{2}-\d{2}-\d{4}$'
+            # if re.match(pattern_str, tgl):
+
+
+            dmy = calculation.spil_tgl(tgl)
+            dd = dmy[0]
+            mm = dmy[1]
+            yyyy = dmy[2]
+            ddmmyyyy = datetime.date(yyyy, mm, dd)
+            f_yyyy = ddmmyyyy.strftime('%d-%m-%Y')
+
+            if tgl == f_yyyy:
                 print("Masukkan jam lembur:")
                 print("Pemisah desimal pakai dot (titik) yaa,.")
                 jam_lembur = float(input())
 
                 calculation.rumus(yyyy, mm, dd, jam_lembur)
 
-                if f"{dd}" in my_data[yyyy][mm]:
-                    my_data[yyyy][mm][dd] = {'Jam lembur': jam_lembur,
-                                            'Perkalian jam lembur': calculation.hasil_perkalian_jam,
-                                            'Nominal uang lembur': calculation.hasil_uang_lemburan}
-                calculation.edit_data(my_data)
-            except ValueError:
-                print("Input yang dimasukkan salah euyy")
-                print("Formatnya harus seperti ini ges => dd-mm-yyyy")
-            except KeyError:
-                print("Tanggal yang diminta tidak ada euyy")
-        else:
-            print("Masukan tidak sesuai format")
+                if (f"{str(yyyy)}" in my_data and
+                        f"{str(mm)}" in my_data[str(yyyy)] and
+                        f"{str(dd)}" in my_data[str(yyyy)][str(mm)]):
+                    my_data[str(yyyy)][str(mm)][str(dd)] = {'Jam lembur': jam_lembur,
+                                                            'Perkalian jam lembur': calculation.hasil_perkalian_jam,
+                                                            'Nominal uang lembur': calculation.hasil_uang_lemburan}
+                    calculation.edit_data(my_data)
+                else:
+                    print("Waktu yang diminta tidak ada euyy,.")
+            else:
+                print("Masukan tidak sesuai format")
+        except ValueError:
+            print("Input yang dimasukkan salah euyy")
+            print("Atau tanggal yang diminta tidak ada")
     else:
         print("Tidak ada yang bisa diedit")
 
@@ -229,23 +240,33 @@ def hapus_overtime():
                         print('\t\t| -', o)
 
             print("Silahkan isi tanggal yang akan dihapus")
-            print("Isikan sesuai data dengan format dd/mm/yyy gitu yaa,.")
-            tgl = input()
-            # Cek string menggunakan regular expresion (import re)
-            pattern_str = r'^\d{2}-\d{2}-\d{4}$'
-            if re.match(pattern_str, tgl):
-                tg = tgl[:2]
-                mm = tgl[3:5]
-                yyyy = tgl[6:10]
-                if tg in my_data[yyyy][mm]:
-                    my_data[yyyy][mm].pop(tg)
-                    calculation.hapus_data(my_data)
-                    print(f"Data tanggal {tgl} dihapus")
+            print("Isikan sesuai data dengan format %d-%m-%Y gitu yaa,.")
+            try:
+                tgl = input()
+                # Cek string menggunakan regular expresion (import re)
+                #pattern_str = r'^\d{2}-\d{2}-\d{4}$'
+                #if re.match(pattern_str, tgl):
+                sptgl = calculation.spil_tgl(tgl)
+                tg = sptgl[0]
+                mm = sptgl[1]
+                yyyy = sptgl[2]
+
+                ddmmyyyy = datetime.date(yyyy, mm, tg)
+                f_yyyy = ddmmyyyy.strftime('%d-%m-%Y')
+
+                if tgl == f_yyyy:
+                    if str(tg) in my_data[str(yyyy)][str(mm)]:
+                        my_data[str(yyyy)][str(mm)].pop(str(tg))
+                        calculation.hapus_data(my_data)
+                        print(f"Data tanggal {tgl} dihapus")
+                    else:
+                        print("Input tidak sesuai data")
                 else:
-                    print("Input tidak sesuai data")
-            else:
-                print("Format tidak sesuai permintaan")
-                print("Isikan sesuai data dan format wajib seperti ini ya => dd/mm/yyy")
+                    print("Format tidak sesuai permintaan")
+                    print("Isikan sesuai data dan format wajib seperti ini ya => %d-%m-%Y")
+            except ValueError:
+                print("Input yang dimasukkan salah euyy")
+                print("Atau tanggal yang diminta tidak ada")
         else:
             print("Input yang dimasukkan tidak sesuai")
     else:

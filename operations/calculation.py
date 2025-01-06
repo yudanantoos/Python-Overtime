@@ -1,3 +1,4 @@
+import datetime
 import json
 import os.path
 import calendar
@@ -101,43 +102,58 @@ def format_rupiah(nominal):
     rubah = 'Rp {:,.2f}'.format(float(nominal))
     return rubah
 
-def jumlah_jam_asli(dari_dd_mm_yyyy, sampai_dd_mm_yyyy):
+def spil_tgl(tglblnthn): #1-1-2025, 1-01-2025, 01-01-2025
+    tgl = []
+    if len(tglblnthn) == 8:
+        tgl.append(int(tglblnthn[0]))
+        tgl.append(int(tglblnthn[2]))
+        tgl.append(int(tglblnthn[4:]))
+    elif len(tglblnthn) == 9:
+        tgl.append(int(tglblnthn[0]))
+        tgl.append(int(tglblnthn[2:4]))
+        tgl.append(int(tglblnthn[5:]))
+    else:
+        tgl.append(int(tglblnthn[:2]))
+        tgl.append(int(tglblnthn[3:5]))
+        tgl.append(int(tglblnthn[6:]))
+    return tgl
+
+def jumlah_jam_asli(dari_tgl='1-1-1970', sampai_tgl='31-12-2125'):
     ambil_list_jam_asli = ambil_data()
-    hasil = 0
-    tampung_tahun = []
-    tampung_bulan = []
-    tampung_tanggal = []
-    range_tahun = list(range(int(dari_dd_mm_yyyy[6:10]), int(sampai_dd_mm_yyyy[6:10]) + 1))
-    range_bulan = list(range(int(dari_dd_mm_yyyy[3:5]), int(sampai_dd_mm_yyyy[3:5]) + 1))
-    range_tanggal = list(range(int(dari_dd_mm_yyyy[:2]), int(sampai_dd_mm_yyyy[:2]) + 1))
+    tampung_hasil = 0
+    if cek_data_isi():
+        drtgl = spil_tgl(dari_tgl)
+        sptgl = spil_tgl(sampai_tgl)
+        fromtgl = datetime.date(drtgl[2],drtgl[1],drtgl[0])
+        untiltgl = datetime.date(sptgl[2],sptgl[1],sptgl[0])
 
-    for th in ambil_list_jam_asli:
-        tampung_tahun.append(th)
-        for bl in ambil_list_jam_asli[th]:
-            tampung_bulan.append(bl)
-            for tgl in ambil_list_jam_asli[th][bl]:
-                tampung_tanggal.append(tgl)
+        while fromtgl <= untiltgl:
+            cektgl = str(fromtgl.day)
+            cekbln = str(fromtgl.month)
+            cekthn = str(fromtgl.year)
+            if (cekthn in ambil_list_jam_asli and
+                cekbln in ambil_list_jam_asli[cekthn] and
+                cektgl in ambil_list_jam_asli[cekthn][cekbln]):
+                tampung_hasil += ambil_list_jam_asli[cekthn][cekbln][cektgl]['Jam lembur']
+            fromtgl += datetime.timedelta(days=1)
+        return tampung_hasil
 
-    for cth in range_tahun:
-        if str(cth) in tampung_tahun:
-            for cbl in range_bulan:
-                if cbl < 10:
-                    cbl = '0' + str(cbl)
-                    print(tampung_bulan)
-                    if str(cbl) in tampung_bulan:
-                        for ctgl in range_tanggal:
-                            print(ctgl)
-                            if ctgl < 10:
-                                ctgl = '0' + str(ctgl)
-                                if ctgl in tampung_tanggal:
-                                    hasil += ambil_list_jam_asli[cth][cbl][ctgl]['Jam lembur']
-    return hasil
+def jumlah_uang_lembur(dari_tgl='1-1-1970', sampai_tgl='31-12-2125'):
+    ambil_list_jam_asli = ambil_data()
+    tampung_hasil = 0
+    if cek_data_isi():
+        drtgl = spil_tgl(dari_tgl)
+        sptgl = spil_tgl(sampai_tgl)
+        fromtgl = datetime.date(drtgl[2], drtgl[1], drtgl[0])
+        untiltgl = datetime.date(sptgl[2], sptgl[1], sptgl[0])
 
-def jumlah_uang_lembur():
-    ambil_list_uang_lembur = ambil_data()
-    hasil = 0
-    for tahun in ambil_list_uang_lembur:
-        for bulan in ambil_list_uang_lembur[tahun]:
-            for tanggal in ambil_list_uang_lembur[tahun][bulan]:
-                hasil += ambil_list_uang_lembur[tahun][bulan][tanggal]['Nominal uang lembur']
-    return hasil
+        while fromtgl <= untiltgl:
+            cektgl = str(fromtgl.day)
+            cekbln = str(fromtgl.month)
+            cekthn = str(fromtgl.year)
+            if (cekthn in ambil_list_jam_asli and
+                    cekbln in ambil_list_jam_asli[cekthn] and
+                    cektgl in ambil_list_jam_asli[cekthn][cekbln]):
+                tampung_hasil += ambil_list_jam_asli[cekthn][cekbln][cektgl]['Nominal uang lembur']
+            fromtgl += datetime.timedelta(days=1)
+        return tampung_hasil
