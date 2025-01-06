@@ -86,7 +86,7 @@ def input_gapok(gapok):
 def rumus(tahun, bulan, tanggal, jam_lembur):
     global hasil_perkalian_jam, hasil_uang_lemburan
 
-    cal = calendar.weekday(tahun, bulan, tanggal)
+    cal = calendar.weekday(int(tahun), int(bulan), int(tanggal))
 
     if cal == 5 or cal == 6:
         jam_pertama = 2
@@ -104,33 +104,27 @@ def format_rupiah(nominal):
 
 def spil_tgl(tglblnthn): #1-1-2025, 1-01-2025, 01-01-2025
     tgl = []
-    if len(tglblnthn) == 8:
-        tgl.append(int(tglblnthn[0]))
-        tgl.append(int(tglblnthn[2]))
-        tgl.append(int(tglblnthn[4:]))
-    elif len(tglblnthn) == 9:
-        tgl.append(int(tglblnthn[0]))
-        tgl.append(int(tglblnthn[2:4]))
-        tgl.append(int(tglblnthn[5:]))
+    if len(tglblnthn) == 10:
+        tgl.append(tglblnthn[:2])
+        tgl.append(tglblnthn[3:5])
+        tgl.append(tglblnthn[6:])
+        return tgl
     else:
-        tgl.append(int(tglblnthn[:2]))
-        tgl.append(int(tglblnthn[3:5]))
-        tgl.append(int(tglblnthn[6:]))
-    return tgl
+        return tgl.append("Salah input tanggal")
 
-def jumlah_jam_asli(dari_tgl='1-1-1970', sampai_tgl='31-12-2125'):
+def jumlah_jam_asli(dari_tgl='01-01-1970', sampai_tgl='31-12-2125'):
     ambil_list_jam_asli = ambil_data()
     tampung_hasil = 0
     if cek_data_isi():
         drtgl = spil_tgl(dari_tgl)
         sptgl = spil_tgl(sampai_tgl)
-        fromtgl = datetime.date(drtgl[2],drtgl[1],drtgl[0])
-        untiltgl = datetime.date(sptgl[2],sptgl[1],sptgl[0])
+        fromtgl = datetime.date(int(drtgl[2]),int(drtgl[1]),int(drtgl[0]))
+        untiltgl = datetime.date(int(sptgl[2]),int(sptgl[1]),int(sptgl[0]))
 
         while fromtgl <= untiltgl:
-            cektgl = str(fromtgl.day)
-            cekbln = str(fromtgl.month)
-            cekthn = str(fromtgl.year)
+            cektgl = fromtgl.strftime('%d')
+            cekbln = fromtgl.strftime('%m')
+            cekthn = fromtgl.strftime('%Y')
             if (cekthn in ambil_list_jam_asli and
                 cekbln in ambil_list_jam_asli[cekthn] and
                 cektgl in ambil_list_jam_asli[cekthn][cekbln]):
@@ -138,19 +132,19 @@ def jumlah_jam_asli(dari_tgl='1-1-1970', sampai_tgl='31-12-2125'):
             fromtgl += datetime.timedelta(days=1)
         return tampung_hasil
 
-def jumlah_uang_lembur(dari_tgl='1-1-1970', sampai_tgl='31-12-2125'):
+def jumlah_uang_lembur(dari_tgl='01-01-1970', sampai_tgl='31-12-2125'):
     ambil_list_jam_asli = ambil_data()
     tampung_hasil = 0
     if cek_data_isi():
         drtgl = spil_tgl(dari_tgl)
         sptgl = spil_tgl(sampai_tgl)
-        fromtgl = datetime.date(drtgl[2], drtgl[1], drtgl[0])
-        untiltgl = datetime.date(sptgl[2], sptgl[1], sptgl[0])
+        fromtgl = datetime.date(int(drtgl[2]), int(drtgl[1]), int(drtgl[0]))
+        untiltgl = datetime.date(int(sptgl[2]), int(sptgl[1]), int(sptgl[0]))
 
         while fromtgl <= untiltgl:
-            cektgl = str(fromtgl.day)
-            cekbln = str(fromtgl.month)
-            cekthn = str(fromtgl.year)
+            cektgl = fromtgl.strftime('%d')
+            cekbln = fromtgl.strftime('%m')
+            cekthn = fromtgl.strftime('%Y')
             if (cekthn in ambil_list_jam_asli and
                     cekbln in ambil_list_jam_asli[cekthn] and
                     cektgl in ambil_list_jam_asli[cekthn][cekbln]):
