@@ -157,3 +157,9 @@ def jumlah_uang_lembur(dari_tgl='1-1-1970', sampai_tgl='31-12-2125'):
                 tampung_hasil += ambil_list_jam_asli[cekthn][cekbln][cektgl]['Nominal uang lembur']
             fromtgl += datetime.timedelta(days=1)
         return tampung_hasil
+
+def sortir(data):
+    data_tahun = {}
+    data_bulan = {}
+    data_hari = {}
+
