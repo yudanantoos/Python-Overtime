@@ -152,8 +152,17 @@ def jumlah_uang_lembur(dari_tgl='01-01-1970', sampai_tgl='31-12-2125'):
             fromtgl += datetime.timedelta(days=1)
         return tampung_hasil
 
-def sortir(data):
-    data_tahun = {}
-    data_bulan = {}
-    data_hari = {}
-
+def sortir(a):
+    for th in a:
+        tahun = list(a)
+        tahun.sort()
+        a = {i: a.get(i) for i in tahun}
+        for bl in a.get(th):
+            bulan = list(a.get(th))
+            bulan.sort()
+            a[th] = {u: a.get(th).get(u) for u in bulan}
+            for tg in a.get(th).get(bl):
+                tanggal = list(a.get(th).get(bl))
+                tanggal.sort()
+                a[th][bl] = {e: a.get(th).get(bl).get(e) for e in tanggal}
+    return a

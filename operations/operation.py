@@ -13,11 +13,12 @@ def semua_data_overtime():
         print("No \t\t Tanggal \t\t Jam lembur \t\t Perkalian Jam Lembur \t\t Nominal Uang Lembur \t\t Jumlah Jam Asli \t\t Jumlah Uang Lembur")
         print('=' * 150)
         print('='*100,'\t  ', calculation.jumlah_jam_asli(),'  \t\t\t\t', calculation.format_rupiah(calculation.jumlah_uang_lembur()))
+        sortir_my_data = calculation.sortir(my_data)
         no = 1
-        for th in my_data:
-            for u in my_data[th]:
-                for i in my_data[th][u]:
-                    print(f"{no}\t\t{i}-{u}-{th}\t\t\t{my_data[th][u][i]['Jam lembur']}\t\t\t\t\t\t{my_data[th][u][i]['Perkalian jam lembur']}\t\t\t\t\t\t{calculation.format_rupiah(my_data[th][u][i]['Nominal uang lembur'])}")
+        for th in sortir_my_data:
+            for u in sortir_my_data[th]:
+                for i in sortir_my_data[th][u]:
+                    print(f"{no}\t\t{i}-{u}-{th}\t\t\t{sortir_my_data[th][u][i]['Jam lembur']}\t\t\t\t\t\t{sortir_my_data[th][u][i]['Perkalian jam lembur']}\t\t\t\t\t\t{calculation.format_rupiah(sortir_my_data[th][u][i]['Nominal uang lembur'])}")
                     no += 1
         print("=" * 150)
     else:
@@ -103,24 +104,29 @@ def input_overtime():
                         my_data[tahun][bulan][tanggal] = {'Jam lembur': jam_lembur,
                                                      'Perkalian jam lembur': calculation.hasil_perkalian_jam,
                                                      'Nominal uang lembur': calculation.hasil_uang_lemburan}
-                        calculation.edit_data(my_data)
+                        sortir_my_data = calculation.sortir(my_data)
+                        calculation.edit_data(sortir_my_data)
                     else:
                         print("Input data dibatalkan")
                 else:
                     my_data[tahun][bulan][tanggal] = {'Jam lembur': jam_lembur,
                                                  'Perkalian jam lembur': calculation.hasil_perkalian_jam,
                                                  'Nominal uang lembur': calculation.hasil_uang_lemburan}
-                    calculation.input_data(my_data)
+
+                    sortir_my_data = calculation.sortir(my_data)
+                    calculation.input_data(sortir_my_data)
             else:
                 my_data[tahun][bulan] = {tanggal: {'Jam lembur': jam_lembur,
                                                            'Perkalian jam lembur': calculation.hasil_perkalian_jam,
                                                            'Nominal uang lembur': calculation.hasil_uang_lemburan}}
-                calculation.input_data(my_data)
+                sortir_my_data = calculation.sortir(my_data)
+                calculation.input_data(sortir_my_data)
         else:
             my_data[tahun] = {bulan: {tanggal: {'Jam lembur': jam_lembur,
                                                                'Perkalian jam lembur': calculation.hasil_perkalian_jam,
                                                                'Nominal uang lembur': calculation.hasil_uang_lemburan}}}
-            calculation.input_data(my_data)
+            sortir_my_data = calculation.sortir(my_data)
+            calculation.input_data(sortir_my_data)
     except ValueError:
         print("Kesalahan input")
         print("Coba cek lagi format nya ya,.")
