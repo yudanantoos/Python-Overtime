@@ -1,13 +1,14 @@
-import datetime
+class Tes:
 
+    def __init__(self,nama):
+        self.nama = nama
 
-def fungsi (a:int, b:int, c:int) -> str:
-    if (type(a) == int
-        and type(b) == int
-        and type(c) == int):
-        d = datetime.date(a, b, c)
-        s = '%d-%m-%Y'
-        return d.strftime(s)
-    return 0
+    @classmethod
+    def ui(cls):
+        nm = 'Vian'
+        c = cls(nm)
+        print(c.nama)
 
-print(fungsi('2025',1,1))
+t = Tes("Aku")
+print(t.nama)
+Tes.ui()
